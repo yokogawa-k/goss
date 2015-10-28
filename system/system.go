@@ -28,6 +28,7 @@ type System struct {
 	NewCommand  func(string, *System) Command
 	NewDNS      func(string, *System) DNS
 	NewProcess  func(string, *System) Process
+	NewURL      func(string, *System) URL
 	NewGossfile func(string, *System) Gossfile
 	Dbus        *dbus.Conn
 	ports       map[string]GOnetstat.Process
@@ -60,6 +61,7 @@ func New(c *cli.Context) *System {
 		NewCommand:  NewDefCommand,
 		NewDNS:      NewDefDNS,
 		NewProcess:  NewDefProcess,
+		NewURL:      NewDefURL,
 		NewGossfile: NewDefGossfile,
 	}
 

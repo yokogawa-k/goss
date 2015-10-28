@@ -416,3 +416,40 @@ func (r *UserMap) UnmarshalJSON(data []byte) error {
 
 	return nil
 }
+
+//go:generate sed -i -e "/^\\/\\/ +build genny/d" resource_list.go
+//go:generate goimports -w resource_list.go resource_list.go
+
+type URLMap map[string]*URL
+
+func (r URLMap) AppendSysResource(sr string, sys *system.System) (*URL, system.URL) {
+	sysres := sys.NewURL(sr, sys)
+	res := NewURL(sysres)
+	r[res.ID()] = res
+	return res, sysres
+}
+
+func (r URLMap) AppendSysResourceIfExists(sr string, sys *system.System) (*URL, system.URL, bool) {
+	sysres := sys.NewURL(sr, sys)
+	res := NewURL(sysres)
+	if e, _ := sysres.Exists(); e != true {
+		return res, sysres, false
+	}
+	r[res.ID()] = res
+	return res, sysres, true
+}
+
+func (r *URLMap) UnmarshalJSON(data []byte) error {
+	var tmp map[string]*URL
+	if err := json.Unmarshal(data, &tmp); err != nil {
+		return err
+	}
+
+	for id, res := range tmp {
+		res.SetID(id)
+	}
+
+	*r = tmp
+
+	return nil
+}

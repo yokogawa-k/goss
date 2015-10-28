@@ -239,6 +239,7 @@ func ValidateContains(res IDer, property string, expectedValues []string, method
 		}
 	}
 	scanner := bufio.NewScanner(fh)
+	*scanner.Buffer(foo, 10)
 	notfound := sliceToPatterns(expectedValues)
 	var found []patternMatcher
 	for scanner.Scan() {

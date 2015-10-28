@@ -26,7 +26,8 @@ type ConfigJSON struct {
 	Groups    resource.GroupMap    `json:"group,omitempty"`
 	Commands  resource.CommandMap  `json:"command,omitempty"`
 	DNS       resource.DNSMap      `json:"dns,omitempty"`
-	Processes resource.ProcessMap  `json:"processe,omitempty"`
+	Processes resource.ProcessMap  `json:"process,omitempty"`
+	URLs      resource.URLMap      `json:"url,omitempty"`
 	Gossfiles resource.GossfileMap `json:"gossfile,omitempty"`
 }
 
@@ -42,6 +43,7 @@ func NewConfigJSON() *ConfigJSON {
 		Commands:  make(resource.CommandMap),
 		DNS:       make(resource.DNSMap),
 		Processes: make(resource.ProcessMap),
+		URLs:      make(resource.URLMap),
 		Gossfiles: make(resource.GossfileMap),
 	}
 }
@@ -57,7 +59,7 @@ func (c *ConfigJSON) String() string {
 func (c *ConfigJSON) Resources() []resource.Resource {
 	var tests []resource.Resource
 
-	gm := genericConcatMaps(c.Commands, c.Addrs, c.DNS, c.Packages, c.Services, c.Files, c.Processes, c.Users, c.Groups, c.Ports)
+	gm := genericConcatMaps(c.Commands, c.Addrs, c.URLs, c.DNS, c.Packages, c.Services, c.Files, c.Processes, c.Users, c.Groups, c.Ports)
 	for _, m := range gm {
 		for _, t := range m {
 			// FIXME: Can this be moved to a safer compile-time check?
@@ -177,6 +179,10 @@ func mergeGoss(g1, g2 ConfigJSON) ConfigJSON {
 		g1.Processes[k] = v
 	}
 
+	for k, v := range g2.URLs {
+		g1.URLs[k] = v
+	}
+
 	return g1
 }
 
@@ -228,6 +234,9 @@ func AppendResource(fileName, resourceName, key string, c *cli.Context) error {
 		resourcePrint(fileName, res)
 	case "Process":
 		res, _ := configJSON.Processes.AppendSysResource(key, sys)
+		resourcePrint(fileName, res)
+	case "Url":
+		res, _ := configJSON.URLs.AppendSysResource(key, sys)
 		resourcePrint(fileName, res)
 	case "Service":
 		res, _ := configJSON.Services.AppendSysResource(key, sys)

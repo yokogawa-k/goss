@@ -9,7 +9,7 @@ import (
 	"github.com/cheekybits/genny/generic"
 )
 
-//go:generate genny -in=$GOFILE -out=resource_list.go gen "ResourceType=Addr,Command,DNS,File,Gossfile,Group,Package,Port,Process,Service,User"
+//go:generate genny -in=$GOFILE -out=resource_list.go gen "ResourceType=Addr,Command,DNS,File,Gossfile,Group,Package,Port,Process,Service,User,URL"
 //go:generate sed -i -e "/^\\/\\/ +build genny/d" resource_list.go
 //go:generate goimports -w resource_list.go resource_list.go
 

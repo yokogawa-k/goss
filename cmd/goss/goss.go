@@ -144,6 +144,13 @@ func main() {
 					},
 				},
 				{
+					Name:  "url",
+					Usage: "add new url",
+					Action: func(c *cli.Context) {
+						goss.AppendResource(c.GlobalString("gossfile"), "Url", c.Args().First(), c)
+					},
+				},
+				{
 					Name:  "goss",
 					Usage: "add new goss file",
 					Action: func(c *cli.Context) {
