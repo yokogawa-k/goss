@@ -226,7 +226,7 @@ func AppendResource(fileName, resourceName, key string, c *cli.Context) error {
 		res, _ := configJSON.Packages.AppendSysResource(key, sys, ignoreList)
 		resourcePrint(fileName, res)
 	case "Port":
-		res, _ := configJSON.Ports.AppendSysResource(key, sys, ignoreList)
+		res, _ := configJSON.Ports.AppendSysResource(key, sys, ignoreList, c)
 		resourcePrint(fileName, res)
 	case "Process":
 		res, _ := configJSON.Processes.AppendSysResource(key, sys, ignoreList)
@@ -275,21 +275,21 @@ func AutoAppendResource(fileName, key string, c *cli.Context) error {
 	}
 
 	// port
-	if res, _, ok := configJSON.Ports.AppendSysResourceIfExists(key, sys); ok == true {
+	if res, _, ok := configJSON.Ports.AppendSysResourceIfExists(key, sys, c); ok == true {
 		resourcePrint(fileName, res)
 	}
 
 	// process
 	if res, sysres, ok := configJSON.Processes.AppendSysResourceIfExists(key, sys); ok == true {
 		resourcePrint(fileName, res)
-		ports := system.GetPorts(true)
+		ports := system.GetPorts(true, c)
 		pids, _ := sysres.Pids()
 		for _, pid := range pids {
 			pidS := strconv.Itoa(pid)
 			for port, entry := range ports {
 				if entry.Pid == pidS {
 					// port
-					if res, _, ok := configJSON.Ports.AppendSysResourceIfExists(port, sys); ok == true {
+					if res, _, ok := configJSON.Ports.AppendSysResourceIfExists(port, sys, c); ok == true {
 						resourcePrint(fileName, res)
 					}
 				}

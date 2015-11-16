@@ -23,7 +23,7 @@ type System struct {
 	NewPackage  func(string, *System) Package
 	NewFile     func(string, *System) File
 	NewAddr     func(string, *System) Addr
-	NewPort     func(string, *System) Port
+	NewPort     func(string, *System, *cli.Context) Port
 	NewService  func(string, *System) Service
 	NewUser     func(string, *System) User
 	NewGroup    func(string, *System) Group
@@ -38,9 +38,9 @@ type System struct {
 	procMap     map[string][]ps.Process
 }
 
-func (s *System) Ports() map[string]GOnetstat.Process {
+func (s *System) Ports(c *cli.Context) map[string]GOnetstat.Process {
 	s.portsOnce.Do(func() {
-		s.ports = GetPorts(false)
+		s.ports = GetPorts(false, c)
 	})
 	return s.ports
 }

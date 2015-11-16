@@ -31,6 +31,14 @@ func main() {
 			Name:  "package",
 			Usage: "Package type to use [rpm, deb]",
 		},
+		cli.BoolFlag{
+			Name:  "ipv4,4",
+			Usage: "List only IP version 4 sockets.",
+		},
+		cli.BoolFlag{
+			Name:  "ipv6,6",
+			Usage: "List only IP version 6 sockets.",
+		},
 	}
 	app.Commands = []cli.Command{
 		{

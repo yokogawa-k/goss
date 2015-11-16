@@ -1,6 +1,7 @@
 package resource
 
 import "github.com/aelsabbahy/goss/system"
+import "github.com/codegangsta/cli"
 
 type Port struct {
 	Port      string `json:"-"`
@@ -11,8 +12,8 @@ type Port struct {
 func (p *Port) ID() string      { return p.Port }
 func (p *Port) SetID(id string) { p.Port = id }
 
-func (p *Port) Validate(sys *system.System) []TestResult {
-	sysPort := sys.NewPort(p.Port, sys)
+func (p *Port) Validate(sys *system.System, c *cli.Context) []TestResult {
+	sysPort := sys.NewPort(p.Port, sys, c)
 
 	var results []TestResult
 

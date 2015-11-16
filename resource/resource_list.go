@@ -8,6 +8,7 @@ import (
 	"encoding/json"
 
 	"github.com/aelsabbahy/goss/system"
+	"github.com/codegangsta/cli"
 )
 
 //go:generate sed -i -e "/^\\/\\/ +build genny/d" resource_list.go
@@ -274,15 +275,15 @@ func (r *PackageMap) UnmarshalJSON(data []byte) error {
 
 type PortMap map[string]*Port
 
-func (r PortMap) AppendSysResource(sr string, sys *system.System, ignoreList []string) (*Port, system.Port) {
-	sysres := sys.NewPort(sr, sys)
+func (r PortMap) AppendSysResource(sr string, sys *system.System, ignoreList []string, c *cli.Context) (*Port, system.Port) {
+	sysres := sys.NewPort(sr, sys, c)
 	res := NewPort(sysres, ignoreList)
 	r[res.ID()] = res
 	return res, sysres
 }
 
-func (r PortMap) AppendSysResourceIfExists(sr string, sys *system.System) (*Port, system.Port, bool) {
-	sysres := sys.NewPort(sr, sys)
+func (r PortMap) AppendSysResourceIfExists(sr string, sys *system.System, c *cli.Context) (*Port, system.Port, bool) {
+	sysres := sys.NewPort(sr, sys, c)
 	res := NewPort(sysres, []string{})
 	if e, _ := sysres.Exists(); e != true {
 		return res, sysres, false
